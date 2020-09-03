@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Ther Hang Man</title>
+    <!-- https://electronjs.org/docs/tutorial/security#csp-meta-tag -->
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        .background {
+            position: absolute;
+            display: block;
+            top: 0;
+            left: 0;
+            z-index: -2;
+        }
+
+        .container {z-index: 10;}
+
+        #background {
+            position: absolute;
+            display: block;
+            margin-left: 15px;
+            margin-right: 15px;
+            top: 0;
+            left: 0;
+            width: 95%;
+            z-index: -1;
+        }
+
+        .sButton:hover {
+            background-color: #d2c7d2;
+        }
+
+        .sButton {
+            border: none;
+            background-color: #82b6a5;
+            height: 50px;
+            width: 200px;
+            margin-left:3em;
+            z-index:2;
+        }
+
+    </style>
+    <script type="text/javascript" src="node_modules/particlesjs/src/particles.js"></script>
+</head>
+<body>
+
+<div id="mBody" class="container">
+
+</div>
+
+<canvas id="background">
+
+</canvas>
+
+<canvas class="background">
+
+</canvas>
+<!--We are using node <script>document.write(process.versions.node)</script>,
+Chrome <script>document.write(process.versions.chrome)</script>,
+and Electron <script>document.write(process.versions.electron)</script>.-->
+<script>
+    loopq = 0;
+    resetLoop = false;
+    setDiv = false;
+    dimension = 0;
+    window.onload = function() {
+        Particles.init({
+            selector: '.background'
+        });
+
+        window.requestAnimationFrame(draw);
+    };
+
+    function goGame() {
+        location.href = "game.html";
+    }
+
+    function draw() {
+        let canvas = document.getElementById("background");
+        let ctx = canvas.getContext("2d");
+        const x = canvas.width / 2;
+
+        ctx.globalCompositeOperation = 'destination-over';
+        ctx.clearRect(0, 0, 300, 300); // clear canvas
+
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+        ctx.strokeStyle = 'rgba(0, 153, 255, 0.4)';
+
+        ctx.save();
+
+
+        loopq++;
+        var dimString;
+        if (dimension >= 280) {
+            console.log("it's 300");
+            dimension = 280;
+            dimString = dimension.toString() + '%';
+            if(loopq >= 619 && setDiv == false) {
+                node = document.getElementById("mBody");
+                var divNode = document.createElement("button");
+                divNode.setAttribute("style", "opacity: 0;");
+                divNode.setAttribute("class", "sButton");
+                divNode.setAttribute("id", "startBtn");
+                divNode.setAttribute("type", "submit");
+                divNode.setAttribute("onClick", "goGame()");
+
+                divNode.innerText = "START";
+                node.appendChild(divNode)
+                setDiv = true;
+                console.log(divNode);
+            } else {
+                if (loopq > 629 && resetLoop === false){
+                    divNode = document.getElementById("startBtn");
+                    let opacity = (loopq - 629) / 300
+                    if (opacity >=100){
+                        resetLoop = true;
+                        loopq = 0;
+
+                    }
+                    let strOpacity = opacity.toString();
+                    divNode.setAttribute("style", "opacity: " + strOpacity + "; margin-left: " + (x/2+100).toString() + "; margin-top: 400px")
+                } else if (resetLoop === true){
+                    loopq = 0;
+                }
+            }
+
+        }
+        else {
+            dimension = 1 + (loopq/(loopq/(loopq/2)));
+            dimString = dimension.toString() + '%';
+        }
+        ctx.font = dimString + ' Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('The Hang-Man', x, 85);
+
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, dimension);
+        ctx.stroke();
+
+        window.requestAnimationFrame(draw);
+    }
+
+
+</script>
+</body>
+</html>
