@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Hello World!</title>
     <!-- https://electronjs.org/docs/tutorial/security#csp-meta-tag -->
-    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+    <!--<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />-->
     <style>
         html,
         body {
@@ -47,7 +47,7 @@
         }
 
     </style>
-    <script type="text/javascript" src="node_modules/particlesjs/src/particles.js"></script>
+    <script type="text/javascript" src="node_modules/particlesjs/dist/particles.js"></script>
 </head>
 <body>
 
@@ -55,22 +55,22 @@
 
 </div>
 
-<canvas id="background">
-
-</canvas>
-
-<canvas class="background">
-
-</canvas>
+<canvas id="background" class="background"></canvas>
 <!--We are using node <script>document.write(process.versions.node)</script>,
 Chrome <script>document.write(process.versions.chrome)</script>,
 and Electron <script>document.write(process.versions.electron)</script>.-->
 <script>
-       window.onload = function() {
+    var word = "";
+    var argomento = "";
+    var mLength;
+    window.onload = function() {
         Particles.init({
             selector: '.background'
         });
-
+        word = getWord();
+        argomento = getTopic();
+        mLength = word.length;
+        console.log(word);
         window.requestAnimationFrame(draw);
     };
 
@@ -87,7 +87,35 @@ and Electron <script>document.write(process.versions.electron)</script>.-->
 
         ctx.save();
 
+        //print underscores
+        let dim = 420/mLength;
+        ctx.font = dim.toString() + 'px Arial';
+        ctx.textAlign = 'center';
+        var mUnderScores = "";
+        for (var i = 0; i < mLength; i++) {mUnderScores = mUnderScores + "_ "}
+        ctx.fillText(mUnderScores + " ", x, 380);
+
+        let dim_2 = 350/argomento.length;
+        if (dim_2 > 45) {dim_2 = 45}
+        ctx.font = dim_2.toString() + 'px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText(argomento + "  ", x, 440);
+
         window.requestAnimationFrame(draw);
+    }
+
+    function getWord() {
+        var z = require('zebras');
+        let df = z.readCSV("parole.csv");
+        let val = Math.floor(Math.random() * 20);
+        return df[val]["lemma"];
+    }
+
+    function getTopic() {
+        var z = require('zebras');
+        let df = z.readCSV("parole.csv");
+        let val = Math.floor(Math.random() * 20);
+        return df[val]["argomento"];
     }
 </script>
 </body>

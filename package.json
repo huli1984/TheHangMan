@@ -1,0 +1,23 @@
+{
+  "name": "untitled1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^10.1.0",
+    "jsdataframe": "^0.2.0",
+    "particles": "^0.3.1",
+    "particlesjs": "^2.2.3"
+  },
+  "dependencies": {
+    "d3": "^6.1.1",
+    "dataframe-js": "^1.4.3",
+    "zebras": "0.0.18"
+  }
+}
